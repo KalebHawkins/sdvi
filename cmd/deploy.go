@@ -51,7 +51,7 @@ func init() {
 	rootCmd.AddCommand(deployCmd)
 }
 
-func setupEnviornment() error {
+func setupEnvironment() error {
 	var vc VCenter
 	if err := viper.UnmarshalKey("vcenter", &vc); err != nil {
 		return err
@@ -189,7 +189,7 @@ var deployCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		fmt.Println("Setting up environment variables...")
-		if err := setupEnviornment(); err != nil {
+		if err := setupEnvironment(); err != nil {
 			fmt.Fprintf(os.Stderr, "failed to setup enviornment variables: %s\n", err)
 			os.Exit(1)
 		}
