@@ -155,10 +155,6 @@ func generatePlaybook() error {
 
   roles:
     - common
-    - disclaimer
-    - crowdstrike
-    - qualys
-    - splunkforwarder
     - domainjoin
 `
 
