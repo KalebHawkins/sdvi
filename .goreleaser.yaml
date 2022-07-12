@@ -1,0 +1,44 @@
+project_name: sdvi
+before:
+  hooks:
+    - go mod tidy
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+    goarch:
+      - amd64
+    ldflags:
+      - "-X github.com/KalebHawkins/sdvi/cmd.Version={{ .Tag }} -X github.com/KalebHawkins/sdvi/cmd.Commit={{ .ShortCommit }}"
+archives:
+  - 
+    replacements:
+      darwin: Darwin
+      linux: Linux
+      amd64: x86_64
+    files:
+      - config.yml
+      - README*
+      - docs/*
+nfpms:
+  - 
+    replacements:
+      darwin: Darwin
+      linux: Linux
+      amd64: x86_64
+    formats:
+      - rpm
+      - deb
+    maintainer: Kaleb Hawkins <KalebHawkins@outlook.com>
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'

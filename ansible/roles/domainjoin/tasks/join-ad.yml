@@ -1,0 +1,94 @@
+---
+
+#- name: Add EPEL repository
+#  yum_repository:
+#   name: epel
+#   description: EPEL YUM repo
+#   gpgcheck: no
+#   baseurl: https://dl.fedoraproject.org/pub/epel/7/$basearch/
+
+- name: install required packages to join domain
+  yum:
+    update_cache: yes
+    state: latest
+    name:
+    - sssd
+    - realmd
+    - oddjob
+    - oddjob-mkhomedir
+    - adcli
+    - samba-common-tools
+    - krb5-libs
+    - krb5-workstation
+    - sysstat
+    - ksh
+    - python3-pip
+
+- name: install pexpect
+  pip:
+    name: pexpect
+    state: latest
+    executable: /usr/bin/pip3
+
+- name: restart realmd
+  systemd:
+    name: realmd
+    state: restarted
+
+- name: check if joined
+  shell: "realm list"
+  register: isdomjoined
+
+- name: join active directory
+  expect:
+   command: "/usr/sbin/realm join {{ realmControllers[0] }} --user {{ realmUsername }} --computer-ou '{{ realmOU }}'"
+   responses:
+    Password*: "{{ realmPassword }}"
+  when: 'isdomjoined.stdout.find(".com") == -1'
+
+
+- name: enable sssd authentication
+  command: "/usr/bin/authselect select sssd with-mkhomedir"
+
+- name: allow use of short names for realm login
+  lineinfile:
+    path: /etc/sssd/sssd.conf
+    regexp: '^use_fully_qualified_names'
+    line: "use_fully_qualified_names = False"
+
+- name: specify domain controllers to authenticate against
+  lineinfile:
+    path: /etc/sssd/sssd.conf
+    line: "ad_server = {{ realmControllers[0] }}, {{ realmControllers[1] }}"
+
+- name: permit group
+  command: "/usr/sbin/realm permit -g {{ realmGroup }}"
+
+- name: include realm group in sudoers
+  lineinfile:
+    path: /etc/sudoers
+    line: "%{{ realmGroup }} ALL=(ALL) NOPASSWD: ALL"
+
+- name: restart sshd service
+  systemd:
+    name: sshd
+    state: restarted
+
+# See https://access.redhat.com/solutions/4090871
+- name: bug for sssd crashing
+  lineinfile:
+    path: /etc/pam.d/password-auth
+    regexp: '^account.+pam_sss.so'
+    line: "#account     [default=bad success=ok user_unknown=ignore] pam_sss.so"
+
+- name: restart sshd service
+  service: name=sshd state=restarted
+
+- name: restart sssd service
+  systemd:
+    name: sssd
+    state: restarted
+    enabled: yes
+
+- name: reboot server
+  reboot:

@@ -1,0 +1,71 @@
+# The vCenter section is used to define connection parameters of vCenter.
+# IMPORTANT NOTE: The template vm should be a regular VM not marked as template for the 
+# build to work. 
+vcenter:
+  url: https://127.0.0.1:8989 
+  username: user
+  password: pass
+  template: DC0_H0_VM0
+  datastore: LocalDS_0
+  network: VM Network
+  resourcePool: /DC0/host/DC0_C0/Resources
+# Define your servers here. You can add more or build only one.
+servers:
+  - name: testvm0
+    cpu: 4
+    memoryMB: 16384
+    ipaddress: 10.0.0.50
+    netmask: 255.255.255.0
+    gateway: 10.0.0.1
+  - name: testvm1
+    cpu: 4
+    memoryMB: 16384
+    ipaddress: 10.0.0.51
+    netmask: 255.255.255.0
+    gateway: 10.0.0.1
+# ntpServers is a list of NTP servers for your network time.
+ntpServers:
+  - ntp01.example.com
+  - ntp02.example.com
+# Your redhat username and password along with a list of pool ids to subscribe to Red Hat Network.
+redhat:
+  username:
+  password:
+  pools:
+    - example_pool
+# DNS contains two parts a list of DNS servers and a list of search suffixes for domain resolution.
+dns:
+  suffix:
+    - example.com
+    - test.example.com
+    - dev.example.com
+  servers:
+    - dns01
+    - dns02
+# Crowdstrike tag and customerID.
+crowdstrike:
+  tag: SITE-Servers
+  customerID: exampleID
+# Qualys customerID and activationID.
+qualys:
+  customerID: exmapleID
+  activationID: exampleID
+# The generated ssh key and username to configure the servers.
+ansible:
+  sshKeyPath: /root/.ssh/id_rsa
+  username: root
+  httpProxy: http://proxy.example.com:8080
+  httpsProxy: http://proxy.example.com:8080
+# Splunk deploy server username and password along with the deploy server to point the forwarders too.
+splunk:
+  deployUsername: user
+  deployPassword: pass
+  deployServer: splunkdep.example.com:8089
+realm:
+  controllers:
+    - dc01
+    - dc02
+  username: user
+  password: pass
+  group: groupName
+  organizationUnit: ou

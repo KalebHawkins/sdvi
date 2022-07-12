@@ -1,0 +1,17 @@
+---
+
+- name: set dns server and dns search suffix on primary node
+  community.general.nmcli:
+    conn_name: "{{ ansible_default_ipv4.interface }}"
+    ifname: "{{ ansible_default_ipv4.interface }}"
+    type: ethernet
+    ip4: "{{ ansible_default_ipv4.address }}"
+    gw4: "{{ ansible_default_ipv4.gateway }}"
+    dns4: "{{ dnsServers | list }}"
+    dns4_search: "{{ dnsSuffixSearchList | list }}"
+    state: present
+
+- name: restart networkmanager service
+  systemd:
+    name: NetworkManager
+    state: restarted

@@ -1,0 +1,4 @@
+---
+
+- name: import join-ad.yml
+  import_tasks: join-ad.yml
