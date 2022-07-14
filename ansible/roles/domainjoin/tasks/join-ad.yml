@@ -48,7 +48,7 @@
 
 
 - name: enable sssd authentication
-  command: "/usr/bin/authselect select sssd with-mkhomedir with-sudo --force"
+  command: "/usr/bin/authselect select sssd with-mkhomedir --force"
 
 - name: allow use of short names for realm login
   lineinfile:
