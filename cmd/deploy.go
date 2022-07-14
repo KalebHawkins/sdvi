@@ -206,12 +206,6 @@ var deployCmd = &cobra.Command{
 				fmt.Fprintln(os.Stderr, err)
 				os.Exit(1)
 			}
-			if err := deployPackage(srv); err != nil {
-				fmt.Fprintln(os.Stderr, err)
-			}
-			if err := deployPackage(srv); err != nil {
-				fmt.Fprintln(os.Stderr, err)
-			}
 		}
 	},
 }
