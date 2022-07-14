@@ -102,7 +102,7 @@ func cloneVM(s *Server) error {
 
 func createVMDisk(s *Server) error {
 	if s.AppDiskGB == 0 {
-		return fmt.Errorf("appDisk not specified in configuration file")
+		return nil
 	}
 
 	diskCfg := []string{

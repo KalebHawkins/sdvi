@@ -17,6 +17,7 @@ servers:
     ipaddress: 10.0.0.50
     netmask: 255.255.255.0
     gateway: 10.0.0.1
+    appDisk: 10
   - name: testvm1
     cpu: 4
     memoryMB: 16384
