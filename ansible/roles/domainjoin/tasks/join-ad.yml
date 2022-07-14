@@ -90,5 +90,8 @@
     state: restarted
     enabled: yes
 
+- name: update crypto policies
+  shell: update-crypto-policies --set DEFAULT:AD-SUPPORT
+
 - name: reboot server
   reboot:
