@@ -93,5 +93,11 @@
 - name: update crypto policies
   shell: update-crypto-policies --set DEFAULT:AD-SUPPORT
 
+- name: fix bug in system-auth pam file
+  lineinfile:
+    path: /etc/pam.d/system-auth
+    regexp: '^account     [default=bad success=ok user_unknown=ignore] pam_sss.so'
+    line: "#account     [default=bad success=ok user_unknown=ignore] pam_sss.so"
+
 - name: reboot server
   reboot:
